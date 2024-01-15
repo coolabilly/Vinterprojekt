@@ -1,7 +1,7 @@
-import javax.swing.*;
+import java.awt.event.KeyEvent;
 
-public class Player extends JPanel {
-    int yPos =
-    int xPos =
-
+public class Player {
+    public int yPos = 12;
+    public int xPos = 8;
+    public int health= 25;
 }
