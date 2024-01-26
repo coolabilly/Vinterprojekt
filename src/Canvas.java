@@ -21,6 +21,7 @@ public class Canvas extends JPanel implements KeyListener {
 
 
     private void Draw(Graphics g) {
+
         p.drawPlayer(g, gridSize);
 
         for (Enemy enemy: enemies) {
