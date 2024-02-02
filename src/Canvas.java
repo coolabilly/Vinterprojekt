@@ -1,22 +1,33 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
+import java.util.ArrayList;
 
-public class Canvas extends JPanel implements KeyListener {
+public class Canvas extends JPanel implements ActionListener {
     Player p = new Player();
 
-    Enemy[] enemies = new Enemy[]{new Enemy(Color.yellow), new Enemy(Color.RED)};
 
+    ArrayList<Bullet> bullets = new ArrayList<>();
+    ArrayList<Enemy> enemies = new ArrayList();
     int gridSize = 25;
     public int width = 425;
     public int height = 400;
 
+    Timer timer;
+
+    public double frames = 0;
+
     public Canvas() {
         this.setBounds(0, 0, width, height);
         this.setBackground(Color.black);
-        this.addKeyListener(this);
+        this.addKeyListener(new MyKeyAdapter());
         this.setFocusable(true);
+
+        for (int i = 0; i < 3; i++) {
+            enemies.add(new Enemy(Color.yellow));
+        }
+        timer = new Timer(50, this);
+        timer.start();
     }
 
 
@@ -24,16 +35,45 @@ public class Canvas extends JPanel implements KeyListener {
 
         p.drawPlayer(g, gridSize);
 
-        for (Enemy enemy: enemies) {
+        for (Enemy enemy : enemies) {
             enemy.drawEnemy(g, gridSize);
         }
 
-         if (Player.shoot) p.drawBullet(g, gridSize);
+        for(Bullet bullet: bullets) {
+            bullet.draw(g, gridSize);
+        }
 
-    }
+        if (Player.shoot) p.drawBullet(g, gridSize);
 
-    public void update(double deltaTime){
 
+        }
+
+    public void update() {
+        this.frames++;
+
+        if (this.frames % 10 == 0) {
+            for (Enemy enemy : enemies) {
+                enemy.move(width, height);
+            }
+        }
+
+        if (this.frames == 10) {
+            for (Enemy enemy : enemies) {
+                bullets.add(new Bullet(enemy.xPos, enemy.yPos));
+            }
+        }
+
+        if (this.frames % 5 == 0){
+            for(Bullet bullet : bullets) {
+                bullet.move();
+            }
+        }
+
+        p.checkCollision(enemies);
+        p.moveBullet();
+
+
+        if (this.frames == 30) this.frames = 0;
     }
 
     @Override
@@ -45,19 +85,22 @@ public class Canvas extends JPanel implements KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-       p.move(e, this.width, this.height, enemies);
-       p.playerShoot(e);
+    public void actionPerformed(ActionEvent e) {
+        update();
         repaint();
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
 
-    }
+    public class MyKeyAdapter extends KeyAdapter {
 
-    @Override
-    public void keyReleased(KeyEvent e) {
+        @Override
+        public void keyPressed(KeyEvent e) {
+            p.move(e, width, height, enemies);
+            p.playerShoot(e);
+            repaint();
+
+            if (e.getKeyChar() == 'o') enemies.add(new Enemy(Color.red));
+        }
 
     }
 

@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Timer;
 
 public class Player {
@@ -23,7 +24,7 @@ public class Player {
         System.out.println(this.xPos * gridSize + " " + this.yPos * gridSize);
     }
 
-    public void move(KeyEvent e, int width, int height, Enemy[] enemies) {
+    public void move(KeyEvent e, int width, int height, ArrayList<Enemy> enemies) {
 
         if (e.getKeyChar() == 'w') {
             this.yPos--;
@@ -42,35 +43,45 @@ public class Player {
         }
         if (e.getKeyChar() == 'd') {
             this.xPos++;
-            if (this.xPos > width) this.xPos = width;
-                System.out.println("D");
+            if (this.xPos > width) {
+                this.xPos = width;
+                while (true) {
+                    System.out.println("NOOOOOO");
+                }
+            }
+            System.out.println("D");
         }
-        checkCollision(enemies);
+
     }
 
-    public void playerShoot(KeyEvent e){
+    public void playerShoot(KeyEvent e) {
         if (e.getKeyChar() == 'h') {
             bulletY = yPos;
             bulletX = xPos;
             shoot = true;
-            bulletY--;
-
         }
     }
 
-    public void drawBullet(Graphics g, int gridSize) {
-           g.setColor(Color.white);
-           g.fillRect(bulletX * gridSize + gridSize/2 - 2, bulletY * gridSize, 4, 15);
-
+    public void moveBullet() {
+        bulletY--;
     }
 
-    public void checkCollision(Enemy[] enemies) {
+    public void drawBullet(Graphics g, int gridSize) {
+        g.setColor(Color.white);
+        g.fillRect(bulletX * gridSize + gridSize / 2 - 2, bulletY * gridSize, 4, 15);
+    }
 
+    public void checkCollision(ArrayList<Enemy> enemies) {
         for (Enemy enemy : enemies) {
+            //Checks collision with enemy
             if (this.xPos == enemy.xPos && this.yPos == enemy.yPos) {
                 this.isAlive = false;
-                System.out.println("You died");
+                break;
+            }
+            if (this.bulletY == enemy.yPos && this.bulletX == enemy.xPos) {
+                enemy.isHit();
             }
         }
     }
 }
+
