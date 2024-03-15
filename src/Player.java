@@ -9,19 +9,21 @@ public class Player {
     public int bulletY;
     public int bulletX;
     public int health = 25;
+    int score = 0;
     public static boolean shoot = false;
 
 
     public Player() {
-
     }
 
     boolean isAlive = true;
 
     public void drawPlayer(Graphics g, int gridSize) {
-        g.setColor(Color.white);
-        g.fillRect(this.xPos * gridSize, this.yPos * gridSize, this.health, this.health);
-        System.out.println(this.xPos * gridSize + " " + this.yPos * gridSize);
+        if(isAlive == true) {
+            g.setColor(Color.white);
+            g.fillRect(this.xPos * gridSize, this.yPos * gridSize, this.health, this.health);
+            System.out.println(this.xPos * gridSize + " " + this.yPos * gridSize);
+        }
     }
 
     public void move(KeyEvent e, int width, int height, ArrayList<Enemy> enemies) {
@@ -54,11 +56,9 @@ public class Player {
 
     }
 
-    public void playerShoot(KeyEvent e) {
+    public void playerShoot(KeyEvent e, ArrayList<Bullet> bullets) {
         if (e.getKeyChar() == 'h') {
-            bulletY = yPos;
-            bulletX = xPos;
-            shoot = true;
+            bullets.add(new Bullet(this.xPos, this.yPos, Color.white, "up" ));
         }
     }
 
@@ -71,16 +71,20 @@ public class Player {
         g.fillRect(bulletX * gridSize + gridSize / 2 - 2, bulletY * gridSize, 4, 15);
     }
 
-    public void checkCollision(ArrayList<Enemy> enemies) {
+    public void checkCollision(ArrayList<Enemy> enemies, ArrayList<Bullet> bullets) {
         for (Enemy enemy : enemies) {
             //Checks collision with enemy
             if (this.xPos == enemy.xPos && this.yPos == enemy.yPos) {
                 this.isAlive = false;
                 break;
             }
-            if (this.bulletY == enemy.yPos && this.bulletX == enemy.xPos) {
-                enemy.isHit();
-            }
+           for (Bullet bullet : bullets) {
+               if (this.bulletY == enemy.yPos && this.bulletX == enemy.xPos) {
+                   enemy.isHit();
+                   System.out.println("Hej");
+                   score++;
+               }
+           }
         }
     }
 }

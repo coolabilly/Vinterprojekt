@@ -7,6 +7,8 @@ public class Enemy {
     boolean isAlive = true;
     public int health = 25;
 
+    int killedEnemies = 0;
+
     public int bulletY;
     public int bulletX;
 
@@ -16,7 +18,6 @@ public class Enemy {
     public int xPos = rand.nextInt(5, 9);
 
     public int direction;
-
 
     public Enemy(Color color) {
         this.color = color;
@@ -46,9 +47,11 @@ public class Enemy {
     }
 
     public void drawEnemy(Graphics g, int gridSize) {
-        g.setColor(this.color);
-        g.fillRect(this.xPos * gridSize + (25 - this.health)/2, this.yPos * gridSize, this.health, this.health);
-        //System.out.println(this.xPos * gridSize + " " + this.yPos * gridSize);
+        if (isAlive = true) {
+            g.setColor(this.color);
+            g.fillRect(this.xPos * gridSize + (25 - this.health) / 2, this.yPos * gridSize, this.health, this.health);
+            //System.out.println(this.xPos * gridSize + " " + this.yPos * gridSize);
+        }
     }
 
     public void enemyShoot (){
@@ -67,11 +70,8 @@ public class Enemy {
 
 
     public void isHit(){
-        health = health - 9;
+        isAlive = false;
+        killedEnemies++;
     }
-    public void death(){
-        if (isAlive == false) {
 
-        }
-    }
 }

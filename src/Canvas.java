@@ -5,8 +5,6 @@ import java.util.ArrayList;
 
 public class Canvas extends JPanel implements ActionListener {
     Player p = new Player();
-
-
     ArrayList<Bullet> bullets = new ArrayList<>();
     ArrayList<Enemy> enemies = new ArrayList();
     int gridSize = 25;
@@ -59,17 +57,16 @@ public class Canvas extends JPanel implements ActionListener {
 
         if (this.frames == 10) {
             for (Enemy enemy : enemies) {
-                bullets.add(new Bullet(enemy.xPos, enemy.yPos));
+                bullets.add(new Bullet(enemy.xPos, enemy.yPos, Color.yellow, "down"));
             }
         }
 
-        if (this.frames % 5 == 0){
-            for(Bullet bullet : bullets) {
-                bullet.move();
-            }
+
+        for(Bullet bullet : bullets) {
+            bullet.move(frames);
         }
 
-        p.checkCollision(enemies);
+        p.checkCollision(enemies, bullets);
         p.moveBullet();
 
 
@@ -96,7 +93,7 @@ public class Canvas extends JPanel implements ActionListener {
         @Override
         public void keyPressed(KeyEvent e) {
             p.move(e, width, height, enemies);
-            p.playerShoot(e);
+            p.playerShoot(e, bullets);
             repaint();
 
             if (e.getKeyChar() == 'o') enemies.add(new Enemy(Color.red));
