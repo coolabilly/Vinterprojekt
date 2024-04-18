@@ -29,7 +29,4 @@ public class Bullet {
         g.fillRect(this.xPos * gridSize + gridSize / 2 - 2, this.yPos * gridSize, 4, 15);
     }
 
-    public void destroy() {
-        this.color = Color.black;
-    }
 }

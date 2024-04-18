@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Timer;
 
 public class Player {
+
+    Canvas canvas;
     public int yPos = 12;
     public int xPos = 8;
     public int bulletY;
@@ -12,14 +14,18 @@ public class Player {
     int score = 0;
     public static boolean shoot = false;
 
+    private int playerScore = 0;
 
-    public Player() {
+
+    public Player(Canvas canvas) {
+        this.canvas = canvas;
     }
 
     boolean isAlive = true;
 
     public void drawPlayer(Graphics g, int gridSize) {
-        if(isAlive == true) {
+
+        if (isAlive == true) {
             g.setColor(Color.white);
             g.fillRect(this.xPos * gridSize, this.yPos * gridSize, this.health, this.health);
             System.out.println(this.xPos * gridSize + " " + this.yPos * gridSize);
@@ -57,8 +63,8 @@ public class Player {
     }
 
     public void playerShoot(KeyEvent e, ArrayList<Bullet> bullets) {
-        if (e.getKeyChar() == 'h') {
-            bullets.add(new Bullet(this.xPos, this.yPos, Color.white, "up" ));
+        if (e.getKeyChar() == 'h' && isAlive) {
+            bullets.add(new Bullet(this.xPos, this.yPos, Color.white, "up"));
         }
     }
 
@@ -72,20 +78,28 @@ public class Player {
     }
 
     public void checkCollision(ArrayList<Enemy> enemies, ArrayList<Bullet> bullets) {
-        for (Enemy enemy : enemies) {
+        for (int j = 0; j < enemies.size(); j++) {
+            Enemy enemy = enemies.get(j);
             //Checks collision with enemy
             if (this.xPos == enemy.xPos && this.yPos == enemy.yPos) {
-                this.isAlive = false;
-                break;
+                isAlive = false;
             }
-           for (Bullet bullet : bullets) {
-               if (this.bulletY == enemy.yPos && this.bulletX == enemy.xPos) {
-                   enemy.isHit();
-                   System.out.println("Hej");
-                   score++;
-               }
-           }
+            for (int i = 0; i < bullets.size(); i++) {
+                Bullet bullet = bullets.get(i);
+                if (bullet.yPos == enemy.yPos && bullet.xPos == enemy.xPos) {
+                    enemies.remove(enemy);
+                    bullets.remove(bullet);
+                    score++;
+                    i--;
+                } else if (bullet.yPos == this.yPos && bullet.xPos == this.xPos) {
+                    this.isAlive = false;
+                }
+            }
         }
+
+
+
     }
 }
+
 

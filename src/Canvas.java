@@ -4,12 +4,13 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
 public class Canvas extends JPanel implements ActionListener {
-    Player p = new Player();
-    ArrayList<Bullet> bullets = new ArrayList<>();
+    Player p = new Player(this);
+    public ArrayList<Bullet> bullets = new ArrayList<>();
     ArrayList<Enemy> enemies = new ArrayList();
     int gridSize = 25;
     public int width = 425;
     public int height = 400;
+    int enemyAmount = 3;
 
     Timer timer;
 
@@ -22,7 +23,7 @@ public class Canvas extends JPanel implements ActionListener {
         this.setFocusable(true);
 
         for (int i = 0; i < 3; i++) {
-            enemies.add(new Enemy(Color.yellow));
+            enemies.add(new Enemy());
         }
         timer = new Timer(50, this);
         timer.start();
@@ -37,41 +38,63 @@ public class Canvas extends JPanel implements ActionListener {
             enemy.drawEnemy(g, gridSize);
         }
 
-        for(Bullet bullet: bullets) {
+        for (Bullet bullet : bullets) {
             bullet.draw(g, gridSize);
         }
 
         if (Player.shoot) p.drawBullet(g, gridSize);
 
 
-        }
+    }
 
     public void update() {
         this.frames++;
 
-        if (this.frames % 10 == 0) {
+        if (this.frames % Enemy.moveSpeed == 0) {
             for (Enemy enemy : enemies) {
                 enemy.move(width, height);
             }
         }
 
-        if (this.frames == 10) {
+        if (this.frames % Enemy.shootingSpeed == 0) {
             for (Enemy enemy : enemies) {
-                bullets.add(new Bullet(enemy.xPos, enemy.yPos, Color.yellow, "down"));
+                bullets.add(new Bullet(enemy.xPos, enemy.yPos, Enemy.color, "down"));
             }
         }
 
 
-        for(Bullet bullet : bullets) {
+        for (Bullet bullet : bullets) {
             bullet.move(frames);
         }
 
         p.checkCollision(enemies, bullets);
         p.moveBullet();
 
+        enemyLvlUp();
+
 
         if (this.frames == 30) this.frames = 0;
     }
+
+    public void removeBullet(Bullet bullet) {
+        this.bullets.remove(bullet);
+    }
+
+    public void removeEnemy(Enemy enemy) {
+        this.enemies.remove(enemy);
+    }
+
+    public void enemyLvlUp() {
+        if (enemies.isEmpty()) {
+            Enemy.levelUp();
+            enemyAmount++;
+            for (int i = 0; i < enemyAmount; i++) {
+                enemies.add(new Enemy());
+            }
+        }
+
+    }
+
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -95,8 +118,6 @@ public class Canvas extends JPanel implements ActionListener {
             p.move(e, width, height, enemies);
             p.playerShoot(e, bullets);
             repaint();
-
-            if (e.getKeyChar() == 'o') enemies.add(new Enemy(Color.red));
         }
 
     }
