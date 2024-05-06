@@ -27,7 +27,7 @@ public class Enemy {
 
     }
 
-
+//Method that levels up enemy
     static void levelUp() {
         enemyLevel++;
         switch (enemyLevel) {
@@ -53,6 +53,8 @@ public class Enemy {
                 break;
         }
     }
+
+    //Method that moves enemy randomly
     public void move(int width, int height) {
         direction = rand.nextInt(1, 5);
 
@@ -72,11 +74,7 @@ public class Enemy {
         }
     }
 
-    public void isHit(){
-        isAlive = false;
-        killedEnemies++;
-    }
-
+    //Method that draws enemy
     public void drawEnemy(Graphics g, int gridSize) {
         if (isAlive == true) {
             g.setColor(color);
@@ -84,19 +82,4 @@ public class Enemy {
             //System.out.println(this.xPos * gridSize + " " + this.yPos * gridSize);
         }
     }
-
-    public void enemyShoot (){
-        bulletY = yPos;
-        bulletX = xPos;
-    }
-
-    public void moveBullet(){
-        bulletY++;
-    }
-
-    public void drawBullet(Graphics g, int gridSize) {
-        g.setColor(Color.yellow);
-        g.fillRect(bulletX * gridSize + gridSize / 2 - 2, bulletY * gridSize, 4, 15);
-    }
-
 }

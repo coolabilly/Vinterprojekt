@@ -5,7 +5,11 @@ import java.util.ArrayList;
 
 public class Canvas extends JPanel implements ActionListener {
     Player p = new Player(this);
+
+    //List with bullets
     public ArrayList<Bullet> bullets = new ArrayList<>();
+
+    //List with enemeis
     ArrayList<Enemy> enemies = new ArrayList();
     int gridSize = 25;
     public int width = 425;
@@ -22,14 +26,14 @@ public class Canvas extends JPanel implements ActionListener {
         this.addKeyListener(new MyKeyAdapter());
         this.setFocusable(true);
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < enemyAmount; i++) {
             enemies.add(new Enemy());
         }
         timer = new Timer(50, this);
         timer.start();
     }
 
-
+    //Draws entities
     private void Draw(Graphics g) {
 
         p.drawPlayer(g, gridSize);
@@ -47,22 +51,25 @@ public class Canvas extends JPanel implements ActionListener {
 
     }
 
+    //Method that updates game
     public void update() {
         this.frames++;
 
+        //Calls enemy move function
         if (this.frames % Enemy.moveSpeed == 0) {
             for (Enemy enemy : enemies) {
                 enemy.move(width, height);
             }
         }
 
+        //Calls enemy to shoot
         if (this.frames % Enemy.shootingSpeed == 0) {
             for (Enemy enemy : enemies) {
                 bullets.add(new Bullet(enemy.xPos, enemy.yPos, Enemy.color, "down"));
             }
         }
 
-
+        //Calls bullet move function
         for (Bullet bullet : bullets) {
             bullet.move(frames);
         }
@@ -70,9 +77,10 @@ public class Canvas extends JPanel implements ActionListener {
         p.checkCollision(enemies, bullets);
         p.moveBullet();
 
+
         enemyLvlUp();
 
-
+        //Reset frames
         if (this.frames == 30) this.frames = 0;
     }
 
@@ -84,6 +92,8 @@ public class Canvas extends JPanel implements ActionListener {
         this.enemies.remove(enemy);
     }
 
+
+    //Method that checks if enemyArray is empty and calls enemy lvlUp
     public void enemyLvlUp() {
         if (enemies.isEmpty()) {
             Enemy.levelUp();

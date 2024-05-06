@@ -23,8 +23,8 @@ public class Player {
 
     boolean isAlive = true;
 
+    //Method that draws player
     public void drawPlayer(Graphics g, int gridSize) {
-
         if (isAlive == true) {
             g.setColor(Color.white);
             g.fillRect(this.xPos * gridSize, this.yPos * gridSize, this.health, this.health);
@@ -32,65 +32,64 @@ public class Player {
         }
     }
 
+    //Method that let player move
     public void move(KeyEvent e, int width, int height, ArrayList<Enemy> enemies) {
 
         if (e.getKeyChar() == 'w') {
             this.yPos--;
             if (this.yPos < 0) this.yPos = 0;
-            System.out.println("W");
         }
         if (e.getKeyChar() == 's') {
             this.yPos++;
             if (this.yPos > height) this.yPos = height;
-            System.out.println("S");
         }
         if (e.getKeyChar() == 'a') {
             this.xPos--;
             if (this.xPos < 0) this.xPos = 0;
-            System.out.println("A");
         }
         if (e.getKeyChar() == 'd') {
             this.xPos++;
             if (this.xPos > width) {
                 this.xPos = width;
-                while (true) {
-                    System.out.println("NOOOOOO");
-                }
             }
-            System.out.println("D");
         }
-
     }
 
+    //Method that lets the player shoot if "h" is pressed
     public void playerShoot(KeyEvent e, ArrayList<Bullet> bullets) {
         if (e.getKeyChar() == 'h' && isAlive) {
             bullets.add(new Bullet(this.xPos, this.yPos, Color.white, "up"));
         }
     }
 
+    //Method that moves the bullet
     public void moveBullet() {
         bulletY--;
     }
 
+    //Method that draws the bullet
     public void drawBullet(Graphics g, int gridSize) {
         g.setColor(Color.white);
         g.fillRect(bulletX * gridSize + gridSize / 2 - 2, bulletY * gridSize, 4, 15);
     }
 
+    //Method that checks collisions
     public void checkCollision(ArrayList<Enemy> enemies, ArrayList<Bullet> bullets) {
         for (int j = 0; j < enemies.size(); j++) {
             Enemy enemy = enemies.get(j);
-            //Checks collision with enemy
+            //Checks between player and enemy
             if (this.xPos == enemy.xPos && this.yPos == enemy.yPos) {
                 isAlive = false;
             }
             for (int i = 0; i < bullets.size(); i++) {
                 Bullet bullet = bullets.get(i);
+                //Checks collision between bullet and enemy
                 if (bullet.yPos == enemy.yPos && bullet.xPos == enemy.xPos) {
                     enemies.remove(enemy);
                     bullets.remove(bullet);
                     score++;
                     i--;
+                    //Checks collision between enemy bullet and player
                 } else if (bullet.yPos == this.yPos && bullet.xPos == this.xPos) {
                     this.isAlive = false;
                 }

@@ -6,7 +6,7 @@ public class Bullet {
     int xPos;
     int yPos;
 
-    String dir;
+    public String dir;
     Color color;
     public Bullet(int xPos, int yPos, Color color, String dir){
         this.xPos = xPos;
@@ -15,6 +15,7 @@ public class Bullet {
         this.dir = dir;
     }
 
+    //Method that move bullet
     public void move(double frames){
         if (Objects.equals(this.dir, "up")) {
              this.yPos--;
@@ -24,6 +25,7 @@ public class Bullet {
 
     }
 
+    //Method that draws bullet
     public void draw(Graphics g, int gridSize) {
         g.setColor(color);
         g.fillRect(this.xPos * gridSize + gridSize / 2 - 2, this.yPos * gridSize, 4, 15);
