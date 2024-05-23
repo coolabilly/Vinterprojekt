@@ -12,7 +12,6 @@ public class Game extends JFrame {
         window.setBackground(Color.black);
         window.setLocationRelativeTo(null);
         window.setVisible(true);
-
         window.add(new Canvas());
     }
 

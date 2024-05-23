@@ -3,7 +3,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Timer;
 
-public class Player {
+public class Player extends Entity{
 
     Canvas canvas;
     public int yPos = 12;

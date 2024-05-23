@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
-public class Enemy {
+public class Enemy extends Entity{
 
     boolean isAlive = true;
     public int health = 25;
